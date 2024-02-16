@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script src="js/jquery-2.1.3.min.js"></script>
+
+   <link rel="stylesheet" href="css/style.css">
+    <title>じゃんけんゲーム</title>
+    <!-- rel="stylesheet" href="css/output.css"> -->
+</head>
+  
+<body>
+
+
+  <header >
+  <h1>じゃんけんゲーム</h1>
+
+  </header>
+
+<script>
+  // Function to generate a random choice for the computer
+  function getComputerChoice() {
+    const choices = ['gu', 'choki', 'pa'];
+    const randomIndex = Math.floor(Math.random() * 3);
+    return choices[randomIndex];
+  }
+  
+  // Function to determine the winner
+  function determineWinner(userChoice, computerChoice) {
+    if (userChoice === computerChoice) return 'アイコ';
+    if ((userChoice === 'gu' && computerChoice === 'choki') ||
+        (userChoice === 'choki' && computerChoice === 'pa') ||
+        (userChoice === 'pa' && computerChoice === 'gu')) {
+      return '勝ち';
+    } else {
+      return '負け';
+    }
+  }
+  
+  // Function to reset the selected image
+  function resetSelection() {
+    document.querySelectorAll('#game-buttons img').forEach(img => {
+      img.classList.remove('selected');
+    });
+  }
+  
+  // Main function that runs the game
+  
+  function play(userChoice) {
+    const computerChoice = getComputerChoice();
+    const result = determineWinner(userChoice, computerChoice);
+    
+    // Display computer choice as an image
+    document.getElementById('computer-choice').innerHTML = '<img src="./img/' + computerChoice + '.png" alt="' + computerChoice + '">';
+    document.getElementById('result').textContent = '結果: ' + result;
+    
+    // Highlight the user's choice and reset after 3 seconds
+    document.querySelectorAll('#game-buttons img').forEach(img => {
+      if (img.alt === userChoice) {
+        img.classList.add('selected');
+        setTimeout(resetSelection, 3000); // 3 seconds later
+      }
+    });
+    
+    // Update win count
+    if (result === '勝ち') {
+      let currentWins = parseInt(document.getElementById('win-count').textContent, 10);
+      document.getElementById('win-count').textContent = currentWins + 1;
+    }
+  }
+  
+  // Function to reset the win count and selections
+  function resetWinCount() {
+    document.getElementById('win-count').textContent = '0';
+    document.getElementById('computer-choice').innerHTML = 'さあやってみよう: 同時に出すよ';
+    document.getElementById('result').textContent = 'じゃんけん: ぽん';
+    resetSelection();
+  }
+  </script>
+
+  <main>
+    <div id="game-buttons" class="flex">
+      <img src="./img/gu.png" alt="gu" onclick="play('gu')">
+      <img src="./img/choki.png" alt="choki" onclick="play('choki')">
+      <img src="./img/pa.png" alt="pa" onclick="play('pa')">
+    </div>
+
+
+  </main>
+
+ 
+  
+  <div id="computer-choice" class=main><p>どれか選んでね: 私も出すよ</p></div>
+  <div id="result" class=main><p>結果はここに表示されるよ: スタートしてね</p></div>
+  <p>勝ち回数: <span id="win-count">0</span></p>
+  <button rounded focus:outline-none focus:shadow-outline type="button" onclick="resetWinCount()">勝ち回数リセット</button>
+
+  
+
+</body>
+        
+        <footer>
+
+
+        </footer>
+</html>
